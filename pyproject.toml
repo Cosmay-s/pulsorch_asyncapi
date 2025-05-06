@@ -1,18 +1,22 @@
 [project]
-name = "anthilfastapi"
+name = "anthill"
 version = "0.1.0"
-description = "FastAPI application for job runs"
-readme = "README.md"
-requires-python = ">=3.12"
+description = "FastAPI-based Anthill project"
+authors = [
+    { name="Your Name", email="your@email.com" }
+]
+requires-python = ">=3.8"
 
-# Зависимости проекта
 dependencies = [
-    "fastapi>=0.75.0",
-    "uvicorn>=0.17.0",
-    "pydantic>=1.9.0",
-    "python-dotenv>=0.19.0"
+    "fastapi",
+    "uvicorn[standard]",
+    "pydantic",
+    "python-dotenv"
 ]
 
+[tool.setuptools]
+packages = ["anthill"]
+
 [build-system]
-requires = ["setuptools"]
+requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"

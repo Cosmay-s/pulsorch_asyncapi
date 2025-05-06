@@ -1,0 +1,18 @@
+[project]
+name = "anthilfastapi"
+version = "0.1.0"
+description = "FastAPI application for job runs"
+readme = "README.md"
+requires-python = ">=3.12"
+
+# Зависимости проекта
+dependencies = [
+    "fastapi>=0.75.0",
+    "uvicorn>=0.17.0",
+    "pydantic>=1.9.0",
+    "python-dotenv>=0.19.0"
+]
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"

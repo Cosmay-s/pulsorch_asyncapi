@@ -32,6 +32,7 @@ async def create_run(
     runs.append(run)
     return run
 
+
 @app.get("/api/v1/srv/runs/")
 async def get_runs() -> list[schemas.Run]:
     return runs

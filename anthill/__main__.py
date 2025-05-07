@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Body, Request
+from fastapi import FastAPI, Body
 from fastapi.exceptions import RequestValidationError
 from starlette.exceptions import HTTPException
 from uuid import uuid4
@@ -29,20 +29,9 @@ app = FastAPI()
 runs: list[schemas.Run] = []
 
 
-@app.exception_handler(Exception)
-async def exception_handler(request: Request, exc: Exception):
-    return await handle_unhandled_exception(request, exc)
-
-
-@app.exception_handler(HTTPException)
-async def http_exception_handler(request: Request, exc: HTTPException):
-    return await handle_http_exception(request, exc)
-
-
-@app.exception_handler(RequestValidationError)
-async def validation_exception_handler(request: Request,
-                                       exc: RequestValidationError):
-    return await handle_validation_exception(request, exc)
+app.add_exception_handler(Exception, handle_unhandled_exception)
+app.add_exception_handler(HTTPException, handle_http_exception)
+app.add_exception_handler(RequestValidationError, handle_validation_exception)
 
 
 @app.post("/api/v1/srv/runs/")

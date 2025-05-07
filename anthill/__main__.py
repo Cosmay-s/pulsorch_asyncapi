@@ -1,15 +1,37 @@
 from fastapi import FastAPI, Body
+from fastapi.exceptions import RequestValidationError
+from starlette.exceptions import HTTPException
 from uuid import uuid4
 from datetime import datetime, UTC
 import logging
 import uvicorn
-from anthill import schemas, config
 from typing import Annotated
 import asyncio
+from anthill import schemas, config
+from anthill.exception_handler import handle_http_exception
+from anthill.exception_handler import handle_unhandled_exception
+from anthill.exception_handler import handle_validation_exception
+
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - %(message)s",
+    datefmt="%Y-%m-%d %H:%M:%S",
+    encoding="utf-8"
+)
+
+logger = logging.getLogger(__name__)
+
 
 app = FastAPI()
-logger = logging.getLogger(__name__)
+
+
 runs: list[schemas.Run] = []
+
+
+app.add_exception_handler(Exception, handle_unhandled_exception)
+app.add_exception_handler(HTTPException, handle_http_exception)
+app.add_exception_handler(RequestValidationError, handle_validation_exception)
 
 
 @app.post("/api/v1/srv/runs/")

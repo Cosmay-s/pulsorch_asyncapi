@@ -1,4 +1,6 @@
-from fastapi import FastAPI, Body
+from fastapi import FastAPI, Body, Request
+from fastapi.exceptions import RequestValidationError
+from starlette.exceptions import HTTPException
 from uuid import uuid4
 from datetime import datetime, UTC
 import logging
@@ -6,10 +8,26 @@ import uvicorn
 from anthill import schemas, config
 from typing import Annotated
 import asyncio
+from anthill.exception_handler import exception_handler
 
 app = FastAPI()
 logger = logging.getLogger(__name__)
 runs: list[schemas.Run] = []
+
+
+@app.exception_handler(Exception)
+async def all_exception_handler(request: Request, exc: Exception):
+    return await exception_handler(request, exc)
+
+
+@app.exception_handler(HTTPException)
+async def http_exception_handler(request: Request, exc: HTTPException):
+    return await exception_handler(request, exc)
+
+
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(request: Request, exc: RequestValidationError):
+    return await exception_handler(request, exc)
 
 
 @app.post("/api/v1/srv/runs/")

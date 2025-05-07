@@ -16,7 +16,7 @@ async def handle_unhandled_exception(request: Request, exc: Exception):
 
 async def handle_http_exception(request: Request, exc: Exception):
     if isinstance(exc, HTTPException):
-        logger.warning(f"HTTPException: {exc.status_code} - {exc.detail}")
+        logger.warning("http exception: [%s] %s", exc.status_code, exc.detail)
         return JSONResponse(
             status_code=exc.status_code,
             content={"message": exc.detail}
@@ -26,9 +26,9 @@ async def handle_http_exception(request: Request, exc: Exception):
 
 async def handle_validation_exception(request: Request, exc: Exception):
     if isinstance(exc, RequestValidationError):
-        logger.warning(f"Validation error: {exc.errors()}")
+        logger.warning("validation error: [%s] %s", exc.errors())
         return JSONResponse(
             status_code=422,
             content={"message": "Validation error", "detail": exc.errors()}
         )
-    raise exc 
+    raise exc

@@ -5,29 +5,44 @@ from uuid import uuid4
 from datetime import datetime, UTC
 import logging
 import uvicorn
-from anthill import schemas, config
 from typing import Annotated
 import asyncio
-from anthill.exception_handler import exception_handler
+from anthill import schemas, config
+from anthill.exception_handler import handle_http_exception
+from anthill.exception_handler import handle_unhandled_exception
+from anthill.exception_handler import handle_validation_exception
+
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - %(message)s",
+    datefmt="%Y-%m-%d %H:%M:%S",
+    encoding="utf-8"
+)
+
+logger = logging.getLogger(__name__)
+
 
 app = FastAPI()
-logger = logging.getLogger(__name__)
+
+
 runs: list[schemas.Run] = []
 
 
 @app.exception_handler(Exception)
-async def all_exception_handler(request: Request, exc: Exception):
-    return await exception_handler(request, exc)
+async def exception_handler(request: Request, exc: Exception):
+    return await handle_unhandled_exception(request, exc)
 
 
 @app.exception_handler(HTTPException)
 async def http_exception_handler(request: Request, exc: HTTPException):
-    return await exception_handler(request, exc)
+    return await handle_http_exception(request, exc)
 
 
 @app.exception_handler(RequestValidationError)
-async def validation_exception_handler(request: Request, exc: RequestValidationError):
-    return await exception_handler(request, exc)
+async def validation_exception_handler(request: Request,
+                                       exc: RequestValidationError):
+    return await handle_validation_exception(request, exc)
 
 
 @app.post("/api/v1/srv/runs/")

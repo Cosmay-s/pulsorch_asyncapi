@@ -7,10 +7,10 @@ import logging
 import uvicorn
 from typing import Annotated
 import asyncio
-from anthill import schemas, config
-from anthill.exception_handler import handle_http_exception
-from anthill.exception_handler import handle_unhandled_exception
-from anthill.exception_handler import handle_validation_exception
+from pulsorch import schemas, config
+from pulsorch.exception_handler import handle_http_exception
+from pulsorch.exception_handler import handle_unhandled_exception
+from pulsorch.exception_handler import handle_validation_exception
 
 
 logging.basicConfig(
